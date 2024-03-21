@@ -1,0 +1,3 @@
+torch >=1.11
+
+use installation instructions from pytorch.org to install required torchvision package.

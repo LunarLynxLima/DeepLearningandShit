@@ -27,7 +27,7 @@ if __name__ == "__main__":
     L = [AELossFn(),
          VAELossFn()]
     
-    O = torch.optim.Adam(ParameterSelector(), lr=LEARNING_RATE)
+    O = torch.optim.Adam(ParameterSelector(E, D), lr=LEARNING_RATE)
     
     print("Training Encoder: {}, Decoder: {} on Modified MNIST dataset in AE training paradigm".format(
         E.__class__.__name__,

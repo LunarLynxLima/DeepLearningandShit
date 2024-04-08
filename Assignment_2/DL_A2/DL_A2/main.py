@@ -1,7 +1,7 @@
 # Replace changerollno with your rollnumber as mentioned in Assignment Guidelines
 import argparse
 from Pipeline import *
-from Pipeline.changerollno import *
+from Pipeline.2021061A2 import *
 
 P = argparse.ArgumentParser()
 P.add_argument("gpu", type=str)
@@ -106,3 +106,9 @@ if __name__ == "__main__":
                     num_workers=2,
                     drop_last=True
                 )
+                evaluator(
+                    gpu=A.gpu,
+                    dataloader=test_dataloader,
+                    network=network,
+                    criterion=None,
+                    optimizer=None)

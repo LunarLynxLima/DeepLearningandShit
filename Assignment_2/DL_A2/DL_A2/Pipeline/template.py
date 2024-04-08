@@ -95,7 +95,7 @@ def trainer(gpu="F",
         loss,
         accuracy
     ))
-    """ 
+    """
 
 def validator(gpu="F",
               dataloader=None,
@@ -120,7 +120,8 @@ def validator(gpu="F",
     """
 
 
-def evaluator(dataloader=None,
+def evaluator(gpu="F",
+              dataloader=None,
               network=None,
               criterion=None,
               optimizer=None):
@@ -134,6 +135,6 @@ def evaluator(dataloader=None,
         loss,
         accuracy
     ))
-    """ 
+    """
     
     

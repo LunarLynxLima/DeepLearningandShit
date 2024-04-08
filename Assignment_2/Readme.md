@@ -1,10 +1,10 @@
 The /DLA2/DLA2/Pipeline/2021061A2.py file has implementation for classification :-
 
 Two datasets :
-A) Image Dataset :: [torchaudio.datasets.SPEECHCOMMANDS]
-CIFAR-10 dataset contains 60,000 32x32 color images in 10 different classes.
+A) Image Dataset :: [torchvision.datasets.CIFAR10](https://pytorch.org/vision/main/generated/torchvision.datasets.CIFAR10.html)   
+[CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) dataset contains 60,000 32x32 color images in 10 different classes.
 
-B) Audio Dataset :: [torchvision.datasets.CIFAR10]
+B) Audio Dataset :: [torchaudio.datasets.SPEECHCOMMANDS](https://pytorch.org/audio/main/generated/torchaudio.datasets.SPEECHCOMMANDS.html)  
 Speech Commands Dataset, and used it to add training* and inference sample code to TensorFlow. The dataset has 65,000 one-second long utterances of 30 short words, by thousands of different people.
 
 And implemented achitecture fro the above datasets :

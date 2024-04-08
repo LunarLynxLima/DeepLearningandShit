@@ -4,7 +4,7 @@ Two datasets :
 A) Image Dataset :: [torchvision.datasets.CIFAR10](https://pytorch.org/vision/main/generated/torchvision.datasets.CIFAR10.html)   
 [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) dataset contains 60,000 32x32 color images in 10 different classes.
 
-![CIFAR10](cifar10.png)
+![CIFAR10](assets/cifar10.png)
 
 B) Audio Dataset :: [torchaudio.datasets.SPEECHCOMMANDS](https://pytorch.org/audio/main/generated/torchaudio.datasets.SPEECHCOMMANDS.html)  
 Speech Commands Dataset, and used it to add training* and inference sample code to TensorFlow. The dataset has 65,000 one-second long utterances of 30 short words, by thousands of different people.

@@ -1,6 +1,6 @@
 The /DLA2/DLA2/Pipeline/2021061A2.py file has implementation for classification :-
 
-Two datasets :
+Two datasets :  
 A) Image Dataset :: [torchvision.datasets.CIFAR10](https://pytorch.org/vision/main/generated/torchvision.datasets.CIFAR10.html)   
 [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) dataset contains 60,000 32x32 color images in 10 different classes.
 
@@ -13,16 +13,16 @@ And implemented achitecture fro the above datasets :
 1) ResNet Architecture :  
     The network comprising 18 blocks as depicted below.
 
-    ![ResNet Block](resnet.png)
+    ![ResNet Block](assets/resnet.png)
 2) Mod-VGG Architecture :  
     The modified VGG architecture. After each pooling layer, the number of channels is reduced by 35%, and the kernel size is increased by 25% (with ceil rounding for float calculations). Here, (Conv n-m) denotes the nth block and mth layer within that block.
 
-    ![VGG Network](vgg.png)
+    ![VGG Network](assets/vgg.png)
 3) Mod-Inception Architecture :  
     The configuration of a single inception block, where (n×n (CNA)) denotes a sequence of convolution, batch normalization, and ReLU activation with an n×n convolution filter. 
     And i have construct a modified inception network comprising 4 such blocks.
 
-    ![Modified Inception Module](inception.png)
+    ![Modified Inception Module](assets/inception.png)
 4) Custom Architecture :  
     A custom network using the following combination of blocks and follow the channel reduction and kernel size increase as in VGG. 
 
@@ -39,3 +39,6 @@ And implemented achitecture fro the above datasets :
     (j) Classification Network  
 
     • A classification network here refers to a combination of either nn.Linear or nn.Conv1d, nn.Conv2d layers that produce logits for the classification task.
+
+
+Moreover, refer [Environment Setup](environment_setup.txt) for the setting the environment for training or inference the models.

@@ -468,14 +468,16 @@ class CustomNetwork_Q4(nn.Module):
 
         return x
 
-def plot_graphs(epoch_losses, epoch_accuracies):
+def plot_graphs(epoch_losses, epoch_accuracies, label):
     import matplotlib.pyplot as plt
     # Plotting
     plt.figure(figsize=(10, 5))
 
+    l = [i for i in range(1, EPOCH + 1)]
+
     # Plot loss
     plt.subplot(1, 2, 1)
-    plt.plot(range(1, len(epoch_losses)), epoch_losses, label='Training Loss')
+    plt.plot(l, epoch_losses, label='Training Loss')
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.title('Training Loss')
@@ -483,13 +485,14 @@ def plot_graphs(epoch_losses, epoch_accuracies):
 
     # Plot accuracy
     plt.subplot(1, 2, 2)
-    plt.plot(range(1, len(epoch_accuracies)), epoch_accuracies, label='Training Accuracy', color='orange')
+    plt.plot(l, epoch_accuracies, label='Training Accuracy', color='orange')
     plt.xlabel('Epoch')
     plt.ylabel('Accuracy (%)')
     plt.title('Training Accuracy')
     plt.legend()
 
     plt.tight_layout()
+    plt.savefig(f"{label}_Evaluations.png")
     plt.show()
     
 from tqdm import tqdm
@@ -497,7 +500,8 @@ def trainer(gpu="F",
             dataloader=None,
             network=None,
             criterion=None,
-            optimizer=None):
+            optimizer=None,
+            earlybreak = False):
     
     device = torch.device("cuda:0" if gpu == "T" else "cpu")
     
@@ -505,13 +509,13 @@ def trainer(gpu="F",
 
     network_class = network.__class__.__name__
     dataset_class = dataloader.dataset.__class__.__name__
-    model_path = f"{network_class}_{dataset_class}_model.pth"
+    model_path = f"Networks/{network_class}_{dataset_class}_model.pth"
     
+    epoch_losses, epoch_accuracies = [], []  # List to store epoch losses and epoch accuracies
     for epoch in range(EPOCH):
         epoch_loss = 0.0
         correct_predictions = 0
         total_samples = 0
-        epoch_losses, epoch_accuracies = [], []  # List to store epoch losses and epoch accuracies
         
         for inputs, labels in tqdm(dataloader):
             inputs, labels = inputs.to(device), labels.to(device)
@@ -533,8 +537,10 @@ def trainer(gpu="F",
 
             _, predicted = torch.max(outputs, 1) # outputs.max(1)
             correct_predictions += (predicted == labels).sum().item()
-            total_samples += labels.size(0)
-        
+            total_samples += labels.size(0)   
+
+            if earlybreak: break   
+
         # # checkpoint
         # torch.save(network.state_dict(), model_path)
 
@@ -557,7 +563,8 @@ def trainer(gpu="F",
         'optimizer_state_dict': optimizer.state_dict()
         }, model_path)
     
-    plot_graphs(epoch_losses, epoch_accuracies)
+    plot_graphs(epoch_losses, epoch_accuracies,label = f"Evaluations/{network_class}_{dataset_class}_Training")
+
 
 def validator(gpu="F",
         dataloader=None,
@@ -572,22 +579,15 @@ def validator(gpu="F",
 
     network_class = network.__class__.__name__
     dataset_class = dataloader.dataset.__class__.__name__
-    model_path = f"{network_class}_{dataset_class}_model.pth"
+    model_path = f"Networks/{network_class}_{dataset_class}_model.pth"
     checkpoint = torch.load(model_path)
     network.load_state_dict(checkpoint['model_state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-
-    # checkpoint = torch.load("checkpoint.pth")
-    # network.load_state_dict(checkpoint['model_state_dict'])
-    # optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-
     
     for epoch in range(EPOCH):
         epoch_loss = 0.0
         correct = 0
         total = 0
-        epoch_losses = []  # List to store epoch losses
-        epoch_accuracies = []  # List to store epoch accuracies
         
         # with torch.no_grad():
         for inputs, labels in tqdm(dataloader):
@@ -604,55 +604,46 @@ def validator(gpu="F",
 
         epoch_accuracy = 100. * correct / total
 
-        # Store epoch loss and accuracy
-        epoch_losses.append(epoch_loss)
-        epoch_accuracies.append(epoch_accuracy)
-
         print("Validation Epoch: {}, [Loss: {}, Accuracy: {}]".format(
             epoch+1,
             epoch_loss,
             epoch_accuracy
         )) 
         break
-    
-    # # checkpoint
-    # torch.save(network.state_dict(), model_path)
-    # torch.save(network.state_dict(), "checkpoint.pth")
 
     torch.save({
         'model_state_dict':network.state_dict(),
         'optimizer_state_dict': optimizer.state_dict()
         }, model_path)
+        
 
-    plot_graphs(epoch_losses, epoch_accuracies)
+    
 
 def evaluator(gpu = "F",
             dataloader=None,
             network=None,
             criterion=None,
             optimizer=None,):
-    device = next(network.parameters()).device
+
+    # device = next(network.parameters()).device
+    device = torch.device("cuda:0" if gpu == "T" else "cpu")
 
     criterion = nn.CrossEntropyLoss()
     network = network.to(device)
 
     network_class = network.__class__.__name__
     dataset_class = dataloader.dataset.__class__.__name__
-    model_path = f"{network_class}_{dataset_class}_model.pth"
-    network.load_state_dict(torch.load(model_path))
-
-    # checkpoint = torch.load("checkpoint.pth")
-    # network.load_state_dict(checkpoint)
-
+    model_path = f"Networks/{network_class}_{dataset_class}_model.pth"
+    checkpoint = torch.load(model_path)
+    network.load_state_dict(checkpoint['model_state_dict'])
+    
     for epoch in range(EPOCH):
         epoch_loss = 0.0
         correct = 0
         total = 0
-        epoch_losses = []  # List to store epoch losses
-        epoch_accuracies = []  # List to store epoch accuracies
-
+        
         with torch.no_grad():
-            for inputs, labels in (tqdm(dataloader)):
+            for inputs, labels in tqdm(dataloader):
                 inputs, labels = inputs.to(device), labels.to(device)
 
                 outputs = network(inputs)
@@ -664,14 +655,10 @@ def evaluator(gpu = "F",
                 total += labels.size(0)
                 correct += predicted.eq(labels).sum().item()
 
-        epoch_accuracy = 100. * correct / total
+            epoch_accuracy = 100. * correct / total
 
-        # Store epoch loss and accuracy
-        epoch_losses.append(epoch_loss)
-        epoch_accuracies.append(epoch_accuracy)
-
-        print("[Loss: {}, Accuracy: {}]".format(
-            epoch_loss,
-            epoch_accuracy
-        ))
-        break
+            print("[Loss: {}, Accuracy: {}]".format(
+                epoch_loss,
+                epoch_accuracy
+            ))
+            break

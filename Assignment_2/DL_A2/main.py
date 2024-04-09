@@ -1,7 +1,7 @@
 # Replace changerollno with your rollnumber as mentioned in Assignment Guidelines
 import argparse
 from Pipeline import *
-from Pipeline.A2_2021061 import *
+from Pipeline.A2 import *
 
 P = argparse.ArgumentParser()
 P.add_argument("gpu", type=str)

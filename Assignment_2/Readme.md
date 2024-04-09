@@ -9,6 +9,8 @@ A) Image Dataset :: [torchvision.datasets.CIFAR10](https://pytorch.org/vision/ma
 B) Audio Dataset :: [torchaudio.datasets.SPEECHCOMMANDS](https://pytorch.org/audio/main/generated/torchaudio.datasets.SPEECHCOMMANDS.html)  
 Speech Commands Dataset, and used it to add training* and inference sample code to TensorFlow. The dataset has 65,000 one-second long utterances of 30 short words, by thousands of different people.
 
+---
+
 And implemented achitecture fro the above datasets :
 1) ResNet Architecture :  
     The network comprising 18 blocks as depicted below.
